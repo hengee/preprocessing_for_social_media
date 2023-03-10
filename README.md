@@ -58,6 +58,7 @@ emojis, preprocessed_text = preprocess(text, is_twitter=True)
   author = {Heng Ee Tay},
   year = {2023},
   howpublished = {GitHub repository},
-  url = {https://github.com/hengee/preprocessing_for_social_media}
+  url = {https://github.com/hengee/preprocessing_for_social_media},
+  type = {python source code}
 }
 ```
