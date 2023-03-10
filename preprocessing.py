@@ -8,9 +8,6 @@ EMOJI_PATTERN = re.compile("["
             "]+", flags=re.UNICODE)
 AT_HASH_PATTERN = re.compile(r'\s([@#])(?!\w+\b)')
 RETWEET_PATTERN = re.compile(r'\b(retweet)\b')
-URL_PATTERN = re.compile(r'https?://\S+|www\.\S+')
-HTML_TAG_PATTERN = re.compile(r'<.*?>')
-
 
 def extract_emoji(text):
     """
@@ -74,8 +71,8 @@ def remove_twitter(text):
     """
     # replace usernames with [user]
     text = re.sub(r'@\S+', '@user', text) # replace usernames with @user, @ and user exist in the vocab of sentence transformer
-    text = re.sub(at_hash_pattern,'',text) # remove @ and # symbols
-    text = re.sub(retweet_pattern,'rt',text) # replace the word 'retweet' with 'rt', rt exist in the vocab of sentence transformer but not retweet
+    text = re.sub(AT_HASH_PATTERN,'',text) # remove @ and # symbols
+    text = re.sub(RETWEET_PATTERN,'rt',text) # replace the word 'retweet' with 'rt', rt exist in the vocab of sentence transformer but not retweet
 
     # since it has previously removed the emoji, we don't need to remove it again, but to play safe, we can encode it to utf-8
     text = text.encode('utf-8', errors='ignore') # usually there's error involve with emoji, so we need to encode it to utf-8
@@ -109,3 +106,4 @@ def preprocess(text, is_twitter=True):
 if __name__ == '__main__':
     text = 'RT @user: This is a test tweet with a link https://t.co/123456 and an emoji 😂'
     emojis, preprocessed_text = preprocess(text)
+    print(emojis, preprocessed_text)
