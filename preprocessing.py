@@ -1,17 +1,3 @@
-# e removed self-reported posts from the datasets and kept the most recent 1000 posts. We then performed lowercasing to standardise the text. URLs, HTML tags, “rt” notation, mentions of other users, and hashtag symbols were removed. However, the content of the hashtags was kept.
-
-
-# 1. Extract emoji from text
-# 2. Remove markdown (e.g. # Heading, **Bold**, *Italic*, > Quote, 1. Item, - Item, `Code`, ---, [Link text](URL), ![Alt text](URL))
-# 3. Remove newline and tab characters
-# 4. Remove URLs, HTML tags, “rt” notation, mentions of other users, and hashtag symbols
-# 5. Remove emoji
-# 6. Encode to utf-8
-# 7. Keep punctuation
-# 8. Remove punctuation
-
-# including RT or not
-# 
 import re
 
 emoji_pattern = re.compile("["
@@ -25,11 +11,28 @@ at_hash_pattern = re.compile(r'\s([@#])(?!\w+\b)')
 retweet_pattern = re.compile(r'\b(retweet)\b')
 
 def extract_emoji(text):
+    """
+    Extract all emoji characters from text.
+
+    Args:
+        text: A string containing text to extract emoji from.
+
+    Returns:
+        A string containing all extracted emoji characters separated by spaces.
+    """
     return ' '.join(emoji_pattern.findall(text))
 
 # for reddit or stackoverflow
 def remove_markdown(text):
-    
+    """
+    Remove markdown formatting and symbols from text.
+
+    Args:
+        text: A string containing text to remove markdown from.
+
+    Returns:
+        A string containing text with markdown and symbols removed.
+    """
     text = re.sub(r'^#{1,6}\s+', '', text) # Remove headings (e.g. ## Heading)
     text = re.sub(emoji_pattern, '', text) # Remove emoji
     text = re.sub(r'\*\*(.*?)\*\*', r'\1', text) # Remove bold (e.g. **Bold**)
@@ -58,7 +61,15 @@ def remove_markdown(text):
 
 
 def remove_twitter(text):
+    """
+    Remove Twitter-specific symbols from text.
 
+    Args:
+        text: A string containing text to remove Twitter-specific symbols from.
+
+    Returns:
+        A string containing text with Twitter-specific symbols removed.
+    """
     # replace usernames with [user]
     text = re.sub(r'@\S+', '@user', text) # replace usernames with @user, @ and user exist in the vocab of sentence transformer
     text = re.sub(at_hash_pattern,'',text) # remove @ and # symbols
