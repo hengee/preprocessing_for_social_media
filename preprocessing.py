@@ -1,14 +1,16 @@
 import re
 
-emoji_pattern = re.compile("["
+EMOJI_PATTERN = re.compile("["
             u"\U0001F600-\U0001F64F"  # emoticons
             u"\U0001F300-\U0001F5FF"  # symbols & pictographs
             u"\U0001F680-\U0001F6FF"  # transport & map symbols
             u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
             "]+", flags=re.UNICODE)
+AT_HASH_PATTERN = re.compile(r'\s([@#])(?!\w+\b)')
+RETWEET_PATTERN = re.compile(r'\b(retweet)\b')
+URL_PATTERN = re.compile(r'https?://\S+|www\.\S+')
+HTML_TAG_PATTERN = re.compile(r'<.*?>')
 
-at_hash_pattern = re.compile(r'\s([@#])(?!\w+\b)')
-retweet_pattern = re.compile(r'\b(retweet)\b')
 
 def extract_emoji(text):
     """
@@ -80,16 +82,30 @@ def remove_twitter(text):
 
     return text
 
+def preprocess(text, is_twitter=True):
+    """
+    Preprocess social media text using remove_markdown and remove_twitter. Also returns the emojis in the text.
 
-if __name__ == '__main__':
-    text = 'RT @user: This is a test tweet with a link https://t.co/123456 and an emoji 😂'
+    Args:
+        text (str): The social media text to preprocess.
 
+    Returns:
+        tuple: A tuple containing two items:
+            - str: A string containing all extracted emoji characters separated by spaces.
+            - str: The preprocessed text.
+    """
     # extract emoji first
     emojis = extract_emoji(text)
     # remove markdown
     text = remove_markdown(text)
     # remove twitter specific symbols
-    text = remove_twitter(text)
+	
+    if is_twitter:
+    	text = remove_twitter(text)
     
     # print emojis first and then text in the same line
-    print(emojis, text)
+    return emojis, text
+    
+if __name__ == '__main__':
+    text = 'RT @user: This is a test tweet with a link https://t.co/123456 and an emoji 😂'
+    emojis, preprocessed_text = preprocess(text)
