@@ -19,7 +19,7 @@ def extract_emoji(text):
     Returns:
         A string containing all extracted emoji characters separated by spaces.
     """
-    return ' '.join(emoji_pattern.findall(text))
+    return ' '.join(EMOJI_PATTERN.findall(text))
 
 # for reddit or stackoverflow
 def remove_markdown(text):
@@ -33,7 +33,7 @@ def remove_markdown(text):
         A string containing text with markdown and symbols removed.
     """
     text = re.sub(r'^#{1,6}\s+', '', text) # Remove headings (e.g. ## Heading)
-    text = re.sub(emoji_pattern, '', text) # Remove emoji
+    text = re.sub(EMOJI_PATTERN, '', text) # Remove emoji
     text = re.sub(r'\*\*(.*?)\*\*', r'\1', text) # Remove bold (e.g. **Bold**)
     text = re.sub(r'\*(.*?)\*', r'\1', text) # Remove italic (e.g. *Italic*)
     text = re.sub(r'^\>\s+', '', text, flags=re.MULTILINE) # Remove blockquote (e.g. > Quote)
