@@ -33,7 +33,7 @@ def remove_markdown(text):
         A string containing text with markdown and symbols removed.
     """
     text = re.sub(r'^#{1,6}\s+', '', text) # Remove headings (e.g. ## Heading)
-    text = re.sub(emoji_pattern, '', text) # Remove emoji
+    text = re.sub(EMOJI_PATTERN, '', text) # Remove emoji
     text = re.sub(r'\*\*(.*?)\*\*', r'\1', text) # Remove bold (e.g. **Bold**)
     text = re.sub(r'\*(.*?)\*', r'\1', text) # Remove italic (e.g. *Italic*)
     text = re.sub(r'^\>\s+', '', text, flags=re.MULTILINE) # Remove blockquote (e.g. > Quote)
