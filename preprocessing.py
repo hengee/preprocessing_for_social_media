@@ -12,28 +12,24 @@ RETWEET_PATTERN = re.compile(r'\b(retweet)\b')
 def extract_emoji(text):
     """
     Extract all emoji characters from text.
-
     Args:
         text: A string containing text to extract emoji from.
-
     Returns:
         A string containing all extracted emoji characters separated by spaces.
     """
-    return ' '.join(emoji_pattern.findall(text))
+    return ' '.join(EMOJI_PATTERN.findall(text))
 
 # for reddit or stackoverflow
 def remove_markdown(text):
     """
     Remove markdown formatting and symbols from text.
-
     Args:
         text: A string containing text to remove markdown from.
-
     Returns:
         A string containing text with markdown and symbols removed.
     """
     text = re.sub(r'^#{1,6}\s+', '', text) # Remove headings (e.g. ## Heading)
-    text = re.sub(emoji_pattern, '', text) # Remove emoji
+    text = re.sub(EMOJI_PATTERN, '', text) # Remove emoji
     text = re.sub(r'\*\*(.*?)\*\*', r'\1', text) # Remove bold (e.g. **Bold**)
     text = re.sub(r'\*(.*?)\*', r'\1', text) # Remove italic (e.g. *Italic*)
     text = re.sub(r'^\>\s+', '', text, flags=re.MULTILINE) # Remove blockquote (e.g. > Quote)
@@ -55,17 +51,15 @@ def remove_markdown(text):
     text = re.sub(r'youtube.\S+', '', text)
     text = re.sub(r'<.*?>', '', text) # remove html tags
     text = text.strip() # Remove leading and trailing whitespace
-
+    text = text.lower()
     return text
 
 
 def remove_twitter(text):
     """
     Remove Twitter-specific symbols from text.
-
     Args:
         text: A string containing text to remove Twitter-specific symbols from.
-
     Returns:
         A string containing text with Twitter-specific symbols removed.
     """
@@ -82,17 +76,15 @@ def remove_twitter(text):
 def preprocess(text, is_twitter=True):
     """
     Preprocess social media text using remove_markdown and remove_twitter. Also returns the emojis in the text.
-
     Args:
         text (str): The social media text to preprocess.
-
     Returns:
         tuple: A tuple containing two items:
             - str: A string containing all extracted emoji characters separated by spaces.
             - str: The preprocessed text.
     """
     # extract emoji first
-    emojis = extract_emoji(text)
+    #emojis = extract_emoji(text)
     # remove markdown
     text = remove_markdown(text)
     # remove twitter specific symbols
@@ -101,9 +93,4 @@ def preprocess(text, is_twitter=True):
     	text = remove_twitter(text)
     
     # print emojis first and then text in the same line
-    return emojis, text
-    
-if __name__ == '__main__':
-    text = 'RT @user: This is a test tweet with a link https://t.co/123456 and an emoji 😂'
-    emojis, preprocessed_text = preprocess(text)
-    print(emojis, preprocessed_text)
+    return text
